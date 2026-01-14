@@ -60,11 +60,9 @@ function App() {
 
   return (
     <>
-      <header className="flex-flow">
+      <header className="flex-flow align-center">
         <img src={logo} alt="" />
-        <label htmlFor="units-menu" className="visually-hidden">
-          Choose your units
-        </label>
+        <label htmlFor="units-menu">Units:</label>
         <select name="units" id="units-menu" defaultValue="imperial" onInput={updateUnits}>
           <option value="">Units</option>
           <option value="imperial">Imperial</option>
@@ -122,6 +120,59 @@ function App() {
               </div>
             </div>
           </section>
+
+          <section className="daily flow">
+            <h2>Daily Forcast</h2>
+            <div className="flex-flow">
+              {data.daily.time.map((date, index) => {
+                return (
+                  <div className="daily__day grid-flow">
+                    <p>{date.toLocaleDateString("en-US", { weekday: "short" })}</p>
+                    <img className="weather-icon" src={getWeatherIcon(data.daily.weather_code[index])} alt="" />
+                    <div className="flex-flow space-between">
+                      <span>{Math.round(data.daily.temperature_2m_max[index])}&deg;</span>
+                      <span>{Math.round(data.daily.temperature_2m_min[index])}&deg;</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="hourly">
+            <header className="hourly__header flex-flow space-between">
+              <h2>Hourly Forcast</h2>
+              <label htmlFor="hourly-days" className="visually-hidden">
+                Day of the week:
+              </label>
+              <select name="days" id="hourly-days" defaultValue="imperial" onInput={updateUnits}>
+                {data.daily.time.map((date) => {
+                  return <option value={date}>{date.toLocaleDateString("en-US", { weekday: "long" })}</option>;
+                })}
+              </select>
+            </header>
+
+            <div className="hourly__data">
+              {(() => {
+                // Find the current hour index
+                const currentHourIndex = data.hourly.time.findIndex((time) => time.getHours() === data.current.time.getHours() && time.getDay() === data.current.time.getDay());
+
+                // Get 8 hours starting from current hour
+                return data.hourly.time.slice(currentHourIndex, currentHourIndex + 8).map((time, i) => {
+                  const actualIndex = currentHourIndex + i;
+                  return (
+                    <div key={i} className="hourly__hour flex-flow align-center">
+                      <img className="weather-icon" src={getWeatherIcon(data.hourly.weather_code[actualIndex])} alt="" />
+                      <p>{time.toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
+                      <div className="flex-flow space-between">
+                        <span>{Math.round(data.hourly.temperature_2m[actualIndex])}&deg;</span>
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </section>
         </main>
       ) : (
         <p>Loading data...</p>
@@ -136,9 +187,11 @@ export default App;
 //1. DONE - get weather data from api (see instructions for setup)
 //2. DONE - get user location to load initial data (probably another api?)
 //3. DONE - save api data in state variables (object for weather data)
-//4. load data into html elements
+//4. DONE-ish ~ load data into html elements
 //5. DONE - setup functions to take units from dropdown menu
-//6. set up search location feature
-//6. show list of matching locations as user types
+//6. setup functions to change hourly data based on selected day
+//7. set up search location feature
+//8. show list of matching locations as user types
 //    (need to get/save list of locations somehow - did something similar in JS30)
-//7. style everything to be responsive and check accessibility
+//9. check keys on mapped componenets
+//10. style everything to be responsive and check accessibility

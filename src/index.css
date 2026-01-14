@@ -132,6 +132,7 @@ body {
   background-color: hsl(300, 100%, 20%);
   color: hsl(0 0% 100%);
   padding: 1rem;
+  font-size: 1.25rem;
 }
 
 /* ******** COMPOSITION / LAYOUT ******** */
@@ -180,6 +181,10 @@ body {
   justify-content: center;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
 /* ******** UTILITIES ******** */
 .visually-hidden:not(:focus):not(:active) {
   position: absolute;
@@ -202,6 +207,17 @@ body {
 
 .current__details span {
   font-size: 3rem;
+}
+
+.daily__day {
+  max-width: fit-content;
+  text-align: center;
+}
+
+header,
+section {
+  border: 1px solid firebrick;
+  max-width: 50em;
 }
 
 /* ******** COMPONENTS ******** */
