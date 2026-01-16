@@ -27,23 +27,50 @@ export async function getWeatherData(units = "metric", location) {
   const weatherData = {
     current: {
       time: new Date(Number(current.time()) * 1000),
-      temperature_2m: current.variables(0).value(),
-      relative_humidity_2m: current.variables(1).value(),
-      apparent_temperature: current.variables(2).value(),
+      time_formatted: new Date(Number(current.time()) * 1000).toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+      temperature: Math.round(current.variables(0).value()),
+      humidity: Math.round(current.variables(1).value()),
+      apparent_temperature: Math.round(current.variables(2).value()),
       weather_code: current.variables(3).value(),
-      precipitation: current.variables(4).value(),
-      wind_speed_10m: current.variables(5).value(),
+      precipitation: Math.round(current.variables(4).value()),
+      wind_speed: Math.round(current.variables(5).value()),
+    },
+    daily: {
+      time: Array.from({ length: (Number(daily.timeEnd()) - Number(daily.time())) / daily.interval() }, (_, i) =>
+        new Date((Number(daily.time()) + i * daily.interval()) * 1000).toLocaleDateString("en-US", { weekday: "short" })
+      ),
+
+      weather_code: daily.variables(0).valuesArray(),
+      temperature_max: daily.variables(1).valuesArray().map(Math.round),
+      temperature_min: daily.variables(2).valuesArray().map(Math.round),
     },
     hourly: {
       time: Array.from({ length: (Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval() }, (_, i) => new Date((Number(hourly.time()) + i * hourly.interval()) * 1000)),
-      temperature_2m: hourly.variables(0).valuesArray(),
+
+      get currentHourIndex() {
+        return this.time.findIndex((time) => time.getHours() === weatherData.current.time.getHours() && time.getDay() === weatherData.current.time.getDay());
+      },
+
+      get time_filtered() {
+        return this.time.slice(this.currentHourIndex, this.currentHourIndex + 24).map((time) => time.toLocaleTimeString("en-US", { hour: "numeric", hour12: true }));
+      },
+
+      temperature: hourly.variables(0).valuesArray().map(Math.round),
+
+      get temp_filtered() {
+        return this.temperature.slice(this.currentHourIndex, this.currentHourIndex + 24);
+      },
+
       weather_code: hourly.variables(1).valuesArray(),
-    },
-    daily: {
-      time: Array.from({ length: (Number(daily.timeEnd()) - Number(daily.time())) / daily.interval() }, (_, i) => new Date((Number(daily.time()) + i * daily.interval()) * 1000)),
-      weather_code: daily.variables(0).valuesArray(),
-      temperature_2m_max: daily.variables(1).valuesArray(),
-      temperature_2m_min: daily.variables(2).valuesArray(),
+
+      get codes_filtered() {
+        return this.weather_code.slice(this.currentHourIndex, this.currentHourIndex + 24);
+      },
     },
   };
 

@@ -1,25 +1,30 @@
 import { useEffect, useState } from "react";
 import { getWeatherData } from "./services/weatherData";
-import { getUserLocation, getLocationName } from "./services/geolocation";
-import logo from "./assets/images/logo.svg";
+import { fetchLocation } from "./services/geolocation";
 import { weatherCodes } from "./services/weatherCodes";
 import weatherIcons from "./assets/images/weather-icons/weatherIcons";
+import logo from "./assets/images/logo.svg";
 
 function App() {
   const [units, setUnits] = useState("imperial");
-
+  const [hours, setHours] = useState("12");
+  const [data, setData] = useState(null);
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
     city: null,
+    state: null,
     country: null,
   });
-
-  const [data, setData] = useState(null);
 
   function updateUnits(e) {
     const newUnits = e.target.value;
     setUnits(newUnits);
+  }
+
+  function updateHours(e) {
+    const newValue = e.target.value;
+    setHours(newValue);
   }
 
   function getWeatherIcon(code) {
@@ -27,23 +32,10 @@ function App() {
   }
 
   useEffect(() => {
-    async function fetchLocation() {
-      try {
-        const userLocation = await getUserLocation();
-        const locationName = await getLocationName(userLocation.lat, userLocation.long);
-        setLocation({
-          latitude: userLocation.lat,
-          longitude: userLocation.long,
-          city: locationName.city,
-          state: locationName.state,
-          country: locationName.country,
-        });
-      } catch (error) {
-        console.error("location error", error);
-      }
-    }
-
-    fetchLocation();
+    const getLocationData = async () => {
+      setLocation(await fetchLocation());
+    };
+    getLocationData();
   }, []);
 
   useEffect(() => {
@@ -60,14 +52,18 @@ function App() {
 
   return (
     <>
-      <header className="flex-flow align-center">
+      <header className="flex-flow align-center space-between">
         <img src={logo} alt="" />
-        <label htmlFor="units-menu">Units:</label>
-        <select name="units" id="units-menu" defaultValue="imperial" onInput={updateUnits}>
-          <option value="">Units</option>
-          <option value="imperial">Imperial</option>
-          <option value="metric">Metric</option>
-        </select>
+        <div className="flex-flow">
+          <label htmlFor="units-menu" className="visually-hidden">
+            Choose Units
+          </label>
+          <select name="units" id="units-menu" onInput={updateUnits}>
+            <option value="">Units</option>
+            <option value="imperial">Imperial</option>
+            <option value="metric">Metric</option>
+          </select>
+        </div>
       </header>
 
       {data ? (
@@ -82,40 +78,33 @@ function App() {
             <div className="current__main flex-flow align-center">
               <div className="location">
                 <h2>{location.country.includes("United States") ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`}</h2>
-                <p>
-                  {data.current.time.toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </p>
+                <p>{data.current.time_formatted}</p>
               </div>
               <div className="temperature flex-flow">
                 <img className="weather-icon" src={getWeatherIcon(data.current.weather_code)} alt="" />
-                <span style={{ fontSize: "5rem" }}>{Math.round(data.current.temperature_2m)} &deg;</span>
+                <span style={{ fontSize: "5rem" }}>{data.current.temperature} &deg;</span>
               </div>
             </div>
 
-            <div className="current__details flex-flow">
+            <div className="current__details flex-flow space-between">
               <div className="feels-like">
                 <p>Feels Like</p>
-                <span>{Math.round(data.current.apparent_temperature)}&deg;</span>
+                <span>{data.current.apparent_temperature}&deg;</span>
               </div>
               <div className="humidity">
                 <p>Humidity</p>
-                <span>{Math.round(data.current.relative_humidity_2m)}%</span>
+                <span>{data.current.humidity}%</span>
               </div>
               <div className="Wind">
-                <p>Feels Like</p>
+                <p>Wind Speed</p>
                 <span>
-                  {Math.round(data.current.relative_humidity_2m)} {units === "imperial" ? "mph" : "km/h"}
+                  {data.current.wind_speed} {units === "imperial" ? "mph" : "km/h"}
                 </span>
               </div>
               <div className="precipitation">
                 <p>Precipitation</p>
                 <span>
-                  {Math.round(data.current.precipitation)} {units === "imperial" ? "in" : "mm"}
+                  {data.current.precipitation} {units === "imperial" ? "in" : "mm"}
                 </span>
               </div>
             </div>
@@ -124,14 +113,14 @@ function App() {
           <section className="daily flow">
             <h2>Daily Forcast</h2>
             <div className="flex-flow">
-              {data.daily.time.map((date, index) => {
+              {data.daily.time.map((day, index) => {
                 return (
-                  <div className="daily__day grid-flow">
-                    <p>{date.toLocaleDateString("en-US", { weekday: "short" })}</p>
+                  <div key={index} className="daily__day grid-flow">
+                    <p>{day}</p>
                     <img className="weather-icon" src={getWeatherIcon(data.daily.weather_code[index])} alt="" />
                     <div className="flex-flow space-between">
-                      <span>{Math.round(data.daily.temperature_2m_max[index])}&deg;</span>
-                      <span>{Math.round(data.daily.temperature_2m_min[index])}&deg;</span>
+                      <span>{data.daily.temperature_max[index]}&deg;</span>
+                      <span>{data.daily.temperature_min[index]}&deg;</span>
                     </div>
                   </div>
                 );
@@ -143,34 +132,28 @@ function App() {
             <header className="hourly__header flex-flow space-between">
               <h2>Hourly Forcast</h2>
               <label htmlFor="hourly-days" className="visually-hidden">
-                Day of the week:
+                Choose number of hours
               </label>
-              <select name="days" id="hourly-days" defaultValue="imperial" onInput={updateUnits}>
-                {data.daily.time.map((date) => {
-                  return <option value={date}>{date.toLocaleDateString("en-US", { weekday: "long" })}</option>;
-                })}
+              <select name="days" id="hourly-days" defaultValue="12" onInput={updateHours}>
+                <option value="12">12 hours</option>
+                <option value="24">24 hours</option>
               </select>
             </header>
 
             <div className="hourly__data">
-              {(() => {
-                // Find the current hour index
-                const currentHourIndex = data.hourly.time.findIndex((time) => time.getHours() === data.current.time.getHours() && time.getDay() === data.current.time.getDay());
-
-                // Get 8 hours starting from current hour
-                return data.hourly.time.slice(currentHourIndex, currentHourIndex + 8).map((time, i) => {
-                  const actualIndex = currentHourIndex + i;
+              {data.hourly.time_filtered
+                .filter((_, index) => index < hours)
+                .map((time, index) => {
                   return (
-                    <div key={i} className="hourly__hour flex-flow align-center">
-                      <img className="weather-icon" src={getWeatherIcon(data.hourly.weather_code[actualIndex])} alt="" />
-                      <p>{time.toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
+                    <div key={index} className="hourly__hour flex-flow align-center">
+                      <img className="weather-icon" src={getWeatherIcon(data.hourly.codes_filtered[index])} alt="" />
+                      <p>{time}</p>
                       <div className="flex-flow space-between">
-                        <span>{Math.round(data.hourly.temperature_2m[actualIndex])}&deg;</span>
+                        <span>{data.hourly.temp_filtered[index]}&deg;</span>
                       </div>
                     </div>
                   );
-                });
-              })()}
+                })}
             </div>
           </section>
         </main>
@@ -189,9 +172,9 @@ export default App;
 //3. DONE - save api data in state variables (object for weather data)
 //4. DONE-ish ~ load data into html elements
 //5. DONE - setup functions to take units from dropdown menu
-//6. setup functions to change hourly data based on selected day
+//6. DONE - setup functions to change hourly data based on day - changed to 12/24 hr display
 //7. set up search location feature
 //8. show list of matching locations as user types
 //    (need to get/save list of locations somehow - did something similar in JS30)
-//9. check keys on mapped componenets
+//9. DONE - check keys on mapped componenets
 //10. style everything to be responsive and check accessibility
