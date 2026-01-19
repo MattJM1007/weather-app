@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWeatherData } from "./services/weatherData";
-import { fetchLocation } from "./services/geolocation";
+import { fetchLocation, searchLocations } from "./services/geolocation";
 import { weatherCodes } from "./services/weatherCodes";
 import weatherIcons from "./assets/images/weather-icons/weatherIcons";
 import logo from "./assets/images/logo.svg";
@@ -10,12 +10,14 @@ function App() {
   const [hours, setHours] = useState("12");
   const [data, setData] = useState(null);
   const [location, setLocation] = useState({
+    name: null,
     latitude: null,
     longitude: null,
-    city: null,
-    state: null,
-    country: null,
   });
+  const [query, setQuery] = useState("");
+  const [queryResults, setQueryResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedCity, setSelectedCity] = useState({});
 
   function updateUnits(e) {
     const newUnits = e.target.value;
@@ -47,12 +49,46 @@ function App() {
     }
   }, [units, location]);
 
-  console.log("Render - location:", location);
-  console.log("Render - data:", data);
+  function handleSubmit(e) {
+    e.preventDefault();
+    //set location
+    setQuery("");
+    setLocation(selectedCity);
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (query.length >= 3 && showDropdown) {
+        const cities = await searchLocations(query);
+        setQueryResults(cities);
+      } else {
+        setQueryResults([]);
+        setShowDropdown(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query, showDropdown]);
+
+  async function handleInput(e) {
+    setQuery(e.target.value);
+    setShowDropdown(true);
+  }
+
+  function handleClick(city) {
+    setQuery(city.name);
+    setSelectedCity(city);
+    console.log("selected", selectedCity);
+    setShowDropdown(false);
+    setQueryResults([]);
+  }
+
+  // console.log("Render - location:", location);
+  // console.log("Render - data:", data);
 
   return (
     <>
-      <header className="flex-flow align-center space-between">
+      <header className="wrapper flex-flow align-center space-between">
         <img src={logo} alt="" />
         <div className="flex-flow">
           <label htmlFor="units-menu" className="visually-hidden">
@@ -67,21 +103,37 @@ function App() {
       </header>
 
       {data ? (
-        <main className="flow">
+        <main className="wrapper flow">
           <section className="hero">
             <h1>How's the sky looking today?</h1>
-            <input type="search" name="" id="" />
-            <button type="submit">Search</button>
+            <form role="search" onSubmit={handleSubmit}>
+              <label htmlFor="search-bar" className="visually-hidden">
+                Search Location
+              </label>
+              <input type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} />
+              <button type="submit">Search</button>
+              {showDropdown && (
+                <ul className="dropdown">
+                  {queryResults.map((result, index) => {
+                    return (
+                      <li key={index} onClick={() => handleClick(result)}>
+                        {result.name}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </form>
           </section>
 
           <section className="current">
             <div className="current__main flex-flow align-center">
               <div className="location">
-                <h2>{location.country.includes("United States") ? `${location.city}, ${location.state}` : `${location.city}, ${location.country}`}</h2>
+                <h2>{location.name}</h2>
                 <p>{data.current.time_formatted}</p>
               </div>
               <div className="temperature flex-flow">
-                <img className="weather-icon" src={getWeatherIcon(data.current.weather_code)} alt="" />
+                <img className="weather-icon-lg" src={getWeatherIcon(data.current.weather_code)} alt="" />
                 <span style={{ fontSize: "5rem" }}>{data.current.temperature} &deg;</span>
               </div>
             </div>
@@ -134,7 +186,8 @@ function App() {
               <label htmlFor="hourly-days" className="visually-hidden">
                 Choose number of hours
               </label>
-              <select name="days" id="hourly-days" defaultValue="12" onInput={updateHours}>
+              <select name="days" id="hourly-days" defaultValue="8" onInput={updateHours}>
+                <option value="8">8 hours</option>
                 <option value="12">12 hours</option>
                 <option value="24">24 hours</option>
               </select>
@@ -158,7 +211,7 @@ function App() {
           </section>
         </main>
       ) : (
-        <p>Loading data...</p>
+        <p>Loading weather data...</p>
       )}
     </>
   );

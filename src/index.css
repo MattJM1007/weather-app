@@ -133,7 +133,18 @@ body {
   color: hsl(0 0% 100%);
   padding: 1rem;
   font-size: 1.25rem;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 /* ******** COMPOSITION / LAYOUT ******** */
@@ -202,29 +213,12 @@ body {
 }
 
 .weather-icon {
-  max-width: 120px;
+  max-width: 60px;
   object-fit: cover;
 }
 
-.current__details span {
-  font-size: 3rem;
-}
-
-.daily__day {
-  max-width: fit-content;
-  text-align: center;
-}
-
-.hourly__hour {
-  font-size: 1.75rem;
-}
-
-header,
-section {
-  border: 1px solid firebrick;
-  border-radius: 1rem;
-  max-width: 50em;
-  padding: 1rem;
+.weather-icon-lg {
+  max-width: 120px;
 }
 
 /* ******** COMPONENTS ******** */

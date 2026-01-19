@@ -40,6 +40,7 @@ export async function getWeatherData(units = "metric", location) {
       precipitation: Math.round(current.variables(4).value()),
       wind_speed: Math.round(current.variables(5).value()),
     },
+
     daily: {
       time: Array.from({ length: (Number(daily.timeEnd()) - Number(daily.time())) / daily.interval() }, (_, i) =>
         new Date((Number(daily.time()) + i * daily.interval()) * 1000).toLocaleDateString("en-US", { weekday: "short" })
@@ -49,6 +50,7 @@ export async function getWeatherData(units = "metric", location) {
       temperature_max: daily.variables(1).valuesArray().map(Math.round),
       temperature_min: daily.variables(2).valuesArray().map(Math.round),
     },
+
     hourly: {
       time: Array.from({ length: (Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval() }, (_, i) => new Date((Number(hourly.time()) + i * hourly.interval()) * 1000)),
 
