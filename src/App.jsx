@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { getWeatherData } from "./services/weatherData";
-import { fetchLocation, searchLocations } from "./services/geolocation";
+import { fetchLocation } from "./services/geolocation";
 import { weatherCodes } from "./services/weatherCodes";
 import weatherIcons from "./assets/images/weather-icons/weatherIcons";
 import logo from "./assets/images/logo.svg";
+import SearchContainer from "./components/SearchContainer";
+import CurrentDetails from "./components/CurrentDetails";
+import DayForcast from "./components/DayForcast";
+import HourForcast from "./components/HourForcast";
 
 function App() {
   const [units, setUnits] = useState("imperial");
@@ -14,10 +18,6 @@ function App() {
     latitude: null,
     longitude: null,
   });
-  const [query, setQuery] = useState("");
-  const [queryResults, setQueryResults] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedCity, setSelectedCity] = useState({});
 
   function updateUnits(e) {
     const newUnits = e.target.value;
@@ -31,6 +31,10 @@ function App() {
 
   function getWeatherIcon(code) {
     return weatherIcons[weatherCodes[code]];
+  }
+
+  function handleSubmit(newLocation) {
+    setLocation(newLocation);
   }
 
   useEffect(() => {
@@ -49,42 +53,8 @@ function App() {
     }
   }, [units, location]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    //set location
-    setQuery("");
-    setLocation(selectedCity);
-  }
-
-  useEffect(() => {
-    const timer = setTimeout(async () => {
-      if (query.length >= 3 && showDropdown) {
-        const cities = await searchLocations(query);
-        setQueryResults(cities);
-      } else {
-        setQueryResults([]);
-        setShowDropdown(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [query, showDropdown]);
-
-  async function handleInput(e) {
-    setQuery(e.target.value);
-    setShowDropdown(true);
-  }
-
-  function handleClick(city) {
-    setQuery(city.name);
-    setSelectedCity(city);
-    console.log("selected", selectedCity);
-    setShowDropdown(false);
-    setQueryResults([]);
-  }
-
   // console.log("Render - location:", location);
-  // console.log("Render - data:", data);
+  console.log("Render - data:", data);
 
   return (
     <>
@@ -106,24 +76,7 @@ function App() {
         <main className="wrapper flow">
           <section className="hero">
             <h1>How's the sky looking today?</h1>
-            <form role="search" onSubmit={handleSubmit}>
-              <label htmlFor="search-bar" className="visually-hidden">
-                Search Location
-              </label>
-              <input type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} />
-              <button type="submit">Search</button>
-              {showDropdown && (
-                <ul className="dropdown">
-                  {queryResults.map((result, index) => {
-                    return (
-                      <li key={index} onClick={() => handleClick(result)}>
-                        {result.name}
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </form>
+            <SearchContainer onSubmit={handleSubmit} />
           </section>
 
           <section className="current">
@@ -138,28 +91,7 @@ function App() {
               </div>
             </div>
 
-            <div className="current__details flex-flow space-between">
-              <div className="feels-like">
-                <p>Feels Like</p>
-                <span>{data.current.apparent_temperature}&deg;</span>
-              </div>
-              <div className="humidity">
-                <p>Humidity</p>
-                <span>{data.current.humidity}%</span>
-              </div>
-              <div className="Wind">
-                <p>Wind Speed</p>
-                <span>
-                  {data.current.wind_speed} {units === "imperial" ? "mph" : "km/h"}
-                </span>
-              </div>
-              <div className="precipitation">
-                <p>Precipitation</p>
-                <span>
-                  {data.current.precipitation} {units === "imperial" ? "in" : "mm"}
-                </span>
-              </div>
-            </div>
+            <CurrentDetails data={data.current} units={units} />
           </section>
 
           <section className="daily flow">
@@ -167,14 +99,13 @@ function App() {
             <div className="flex-flow">
               {data.daily.time.map((day, index) => {
                 return (
-                  <div key={index} className="daily__day grid-flow">
-                    <p>{day}</p>
-                    <img className="weather-icon" src={getWeatherIcon(data.daily.weather_code[index])} alt="" />
-                    <div className="flex-flow space-between">
-                      <span>{data.daily.temperature_max[index]}&deg;</span>
-                      <span>{data.daily.temperature_min[index]}&deg;</span>
-                    </div>
-                  </div>
+                  //prettier-ignore
+                  <DayForcast 
+                  key={index} 
+                  day={day} 
+                  icon={getWeatherIcon(data.daily.weather_code[index])} 
+                  tempMax={data.daily.temperature_max[index]} 
+                  tempMin={data.daily.temperature_min[index]} />
                 );
               })}
             </div>
@@ -198,20 +129,22 @@ function App() {
                 .filter((_, index) => index < hours)
                 .map((time, index) => {
                   return (
-                    <div key={index} className="hourly__hour flex-flow align-center">
-                      <img className="weather-icon" src={getWeatherIcon(data.hourly.codes_filtered[index])} alt="" />
-                      <p>{time}</p>
-                      <div className="flex-flow space-between">
-                        <span>{data.hourly.temp_filtered[index]}&deg;</span>
-                      </div>
-                    </div>
+                    //prettier-ignore
+                    <HourForcast
+                      key={index}
+                      time={time}
+                      icon={getWeatherIcon(data.hourly.codes_filtered[index])}
+                      temp={data.hourly.temp_filtered[index]}
+                    />
                   );
                 })}
             </div>
           </section>
         </main>
       ) : (
-        <p>Loading weather data...</p>
+        <main className="wrapper">
+          <p>Loading weather data...</p>
+        </main>
       )}
     </>
   );
@@ -226,8 +159,10 @@ export default App;
 //4. DONE-ish ~ load data into html elements
 //5. DONE - setup functions to take units from dropdown menu
 //6. DONE - setup functions to change hourly data based on day - changed to 12/24 hr display
-//7. set up search location feature
-//8. show list of matching locations as user types
+//7. DONE - set up search location feature
+//8. DONE - show list of matching locations as user types
 //    (need to get/save list of locations somehow - did something similar in JS30)
 //9. DONE - check keys on mapped componenets
 //10. style everything to be responsive and check accessibility
+//11. add alt for icons
+//12. error / loading states
