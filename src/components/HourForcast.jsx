@@ -1,6 +1,6 @@
 export default function HourForcast({ time, icon, temp }) {
   return (
-    <div className="hourly__hour flex-flow align-center">
+    <div className="hourly__hour flex-flow align-center bg-surface-300">
       <img className="weather-icon" src={icon} alt="" />
       <p>{time}</p>
       <div className="flex-flow space-between">

@@ -45,3 +45,27 @@ The designs were created to the following widths:
 - Weights: 700
 
 > 💎 [Upgrade to Pro](https://www.frontendmentor.io/pro?ref=style-guide) for design file access to see all design details and get hands-on experience using a professional workflow with tools like Figma. The design file for this challenge also includes a design system and tablet layout to help you build a more accurate solution faster.
+
+## Spacing System
+
+### Paddings
+
+- **Body**: 16-24-48px (responsive)
+- **Search**: 16px block, 24px inline
+- **Button**: 16px block
+- **Hero**: 80px block, 24px inline
+- **Current Details**: 20px
+- **Daily Day**: 16px block, 10px inline
+- **Hourly**: 20px block, 16px inline
+- **Hourly Hour**: 10px block, 16px inline
+- **Dropdown**: 8px block, 16px inline
+
+### Margins
+
+- **Title**: 48px block
+- **Between Sections**: 32px
+- **Hero to Details**: 20px
+- **Current Details Gap**: 16-24px (responsive)
+- **Title to Details**: 20px
+- **Daily Day Gap**: 16px
+- **Hourly Hour Gap**: 16px

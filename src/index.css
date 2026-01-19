@@ -1,72 +1,106 @@
+@font-face {
+  font-display: swap;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 200;
+  src: url("src/assets/fonts/DM_sans/static_woff2/dm-sans-v17-latin-200.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("src/assets/fonts/DM_sans/static_woff2/dm-sans-v17-latin-regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 500;
+  src: url("src/assets/fonts/DM_sans/static_woff2/dm-sans-v17-latin-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: url("src/assets/fonts/DM_sans/static_woff2/dm-sans-v17-latin-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: url("src/assets/fonts/DM_sans/static_woff2/dm-sans-v17-latin-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 700;
+  src: url("src/assets/fonts/Bricolage_Grotesque/static_woff2/bricolage-grotesque-v9-latin-700.woff2") format("woff2");
+}
+
 :root {
   /* Colors - Primary */
-  --clr-primary-100: ;
-  --clr-primary-200: ;
-  --clr-primary-300: ;
-  --clr-primary-400: ;
-  --clr-primary-500: ;
-  --clr-primary-600: ;
-  --clr-primary-700: ;
-  --clr-primary-800: ;
-  --clr-primary-900: ;
+  -clr-primary-blue-500: hsl(233 67% 56%);
+  -clr-primary-blue-700: hsl(248 70% 36%);
 
   /* Colors - Accent */
-  --clr-accent-1: ;
-  --clr-accent-2: ;
+  --clr-accent-orange-500: hsl(28 100% 52%);
 
   /* Colors - Neutral */
-  --clr-neutral-100: ;
-  --clr-neutral-200: ;
-  --clr-neutral-300: ;
-  --clr-neutral-400: ;
-  --clr-neutral-500: ;
-  --clr-neutral-600: ;
-  --clr-neutral-700: ;
-  --clr-neutral-800: ;
-  --clr-neutral-900: ;
+  --clr-neutral-100: hsl(0 0% 100%);
+  --clr-neutral-200: hsl(250 6% 84%);
+  --clr-neutral-300: hsl(240 6% 70%);
+  --clr-neutral-600: hsl(243, 23%, 30%);
+  --clr-neutral-700: hsl(243 23% 24%);
+  --clr-neutral-800: hsl(243 27% 20%);
+  --clr-neutral-900: hsl(243 96% 9%);
+
+  /* Color - surfaces */
+  --clr-surface-300: var(--clr-neutral-700);
+  --clr-surface-400: var(--clr-neutral-800);
 
   /* Font Families */
-  --ff-base: ;
-  --ff-accent: ;
+  --ff-base: "DM Sans", sans-serif;
+  --ff-accent: "Bricolage Grotesque", sans-serif;
 
   /* Font Sizes */
-  --fs-xs: calc(12 / 16 * 1rem);
-  --fs-sm: calc(14 / 16 * 1rem);
-  --fs-base: calc(16 / 16 * 1rem);
-  --fs-md: calc(18 / 16 * 1rem);
-  --fs-lg: calc(20 / 16 * 1rem);
-  --fs-xl: calc(24 / 16 * 1rem);
-  --fs-2xl: calc(32 / 16 * 1rem);
-  --fs-3xl: calc(48 / 16 * 1rem);
-  --fs-4xl: calc(64 / 16 * 1rem);
+  --fs-xs: calc(14 / 16 * 1rem);
+  --fs-sm: calc(16 / 16 * 1rem);
+  --fs-base: calc(18 / 16 * 1rem);
+  --fs-md: calc(20 / 16 * 1rem);
+  --fs-lg: calc(28 / 16 * 1rem);
+  --fs-xl: calc(32 / 16 * 1rem);
+  --fs-2xl: calc(52 / 16 * 1rem);
+  --fs-3xl: calc(96 / 16 * 1rem);
 
   /* Font Weights */
-  --fw-light: ;
-  --fw-regular: ;
-  --fw-medium: ;
-  --fw-bold: ;
-  --fw-black: ;
+  --fw-light: 200;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semi-bold: 600;
+  --fw-bold: 700;
 
   /* Margin / Padding Spaces */
-  --space-3xs: ;
-  --space-2xs: ;
-  --space-xs: ;
-  --space-sm: ;
-  --space-md: ;
-  --space-lg: ;
-  --space-xl: ;
-  --space-2xl: ;
-  --space-3xl: ;
+  --space-3xs: 0.5rem; /* 8px */
+  --space-2xs: 0.625rem; /* 10px */
+  --space-xs: 1rem; /* 16px */
+  --space-sm: 1.25rem; /* 20px */
+  --space-md: 1.5rem; /* 24px */
+  --space-lg: 2rem; /* 32px */
+  --space-xl: 3rem; /* 48px */
+  --space-2xl: 5rem; /* 80px */
 
-  /* Space One-Step-Up pairs */
-  --space-3xs-2xs: ;
-  --space-2xs-xs: ;
-  --space-xs-sm: ;
-  --space-sm-md: ;
-  --space-md-lg: ;
-  --space-lg-xl: ;
-  --space-xl-2xl: ;
-  --space-2xl-3xl: ;
+  /* Fluid Spacing */
+  --space-body: clamp(1rem, 0.5rem + 2.5vw, 3rem); /* 16-24-48px for body padding */
+  --space-xs-md: clamp(1rem, 0.143rem + 4.286vw, 1.5rem); /* 16px mobile → 24px tablet */
 }
 
 /* ******** RESET ******** */
@@ -128,28 +162,14 @@ body {
   font-family: var(--ff-base);
   font-size: var(--fs-base);
   font-weight: var(--fw-regular);
-
-  background-color: hsl(300, 100%, 20%);
-  color: hsl(0 0% 100%);
-  padding: 1rem;
-  font-size: 1.25rem;
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif;
+  background: var(--clr-neutral-900);
+  color: var(--clr-neutral-100);
+  padding: var(--space-body);
 }
 
 /* ******** COMPOSITION / LAYOUT ******** */
 .wrapper {
-  max-inline-size: 70em;
+  max-inline-size: 76em;
   margin-inline: auto;
 }
 
@@ -157,9 +177,17 @@ body {
   margin-block-start: var(--flow-space, 1rem);
 }
 
+.flow-lg > * + * {
+  margin-block-start: var(--space-lg);
+}
+
 .flex-flow {
   display: flex;
   gap: var(--gap, 1rem);
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .grid-flow {
@@ -173,11 +201,15 @@ body {
 }
 
 .grid-auto {
-  --min-col-size: 200px;
+  --min-col-size: 6rem;
   --item-placement: auto-fit;
   display: grid;
   gap: var(--gap, 1rem);
   grid-template-columns: repeat(var(--item-placement), minmax(min(var(--min-col-size), 100%), 1fr));
+}
+
+.span-all {
+  grid-column: 1 / -1;
 }
 
 .align-center {
@@ -195,6 +227,10 @@ body {
 
 .space-between {
   justify-content: space-between;
+}
+
+.margin-block-xl {
+  margin-block: var(--space-xl);
 }
 
 /* ******** UTILITIES ******** */
@@ -221,8 +257,38 @@ body {
   max-width: 120px;
 }
 
+.bg-surface-400 {
+  background: var(--clr-surface-400);
+}
+
+.bg-surface-300 {
+  background: var(--clr-surface-300);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.main-title {
+  font-family: var(--ff-accent);
+  font-size: var(--fs-2xl);
+  text-wrap: balance;
+}
+
 /* ******** COMPONENTS ******** */
 
 /* ******** BLOCK STYLE ******** */
+
+.current__main {
+  text-align: center;
+  background: url(./assets/images/backgrounds/bg-today-small.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  flex-direction: column;
+}
+
+.current__details {
+  --column-count: 2;
+}
 
 /* ******** EXCEPTIONS ******** */

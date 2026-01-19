@@ -45,7 +45,7 @@ export default function SearchContainer({ onSubmit }) {
       <label htmlFor="search-bar" className="visually-hidden">
         Search Location
       </label>
-      <input type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} />
+      <input type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
       <button type="submit">Search</button>
       {showDropdown && (
         <ul className="dropdown">

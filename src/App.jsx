@@ -8,6 +8,7 @@ import SearchContainer from "./components/SearchContainer";
 import CurrentDetails from "./components/CurrentDetails";
 import DayForcast from "./components/DayForcast";
 import HourForcast from "./components/HourForcast";
+import UnitsIcon from "./assets/images/ui-icons/icon-units.svg";
 
 function App() {
   const [units, setUnits] = useState("imperial");
@@ -73,21 +74,24 @@ function App() {
       </header>
 
       {data ? (
-        <main className="wrapper flow">
-          <section className="hero">
-            <h1>How's the sky looking today?</h1>
+        <main className="wrapper flow-lg">
+          <section className="hero margin-block-xl">
+            <h1 className="main-title text-center">How's the sky looking today?</h1>
+          </section>
+
+          <section className="search-container">
             <SearchContainer onSubmit={handleSubmit} />
           </section>
 
-          <section className="current">
-            <div className="current__main flex-flow align-center">
-              <div className="location">
+          <section className="current flow">
+            <div className="current__main flex-flow align-center span-all">
+              <div className="location flow">
                 <h2>{location.name}</h2>
                 <p>{data.current.time_formatted}</p>
               </div>
-              <div className="temperature flex-flow">
+              <div className="temperature flex-flow align-center">
                 <img className="weather-icon-lg" src={getWeatherIcon(data.current.weather_code)} alt="" />
-                <span style={{ fontSize: "5rem" }}>{data.current.temperature} &deg;</span>
+                <span>{data.current.temperature} &deg;</span>
               </div>
             </div>
 
@@ -96,7 +100,7 @@ function App() {
 
           <section className="daily flow">
             <h2>Daily Forcast</h2>
-            <div className="flex-flow">
+            <div className="grid-auto">
               {data.daily.time.map((day, index) => {
                 return (
                   //prettier-ignore
@@ -111,20 +115,20 @@ function App() {
             </div>
           </section>
 
-          <section className="hourly">
+          <section className="hourly bg-surface-400">
             <header className="hourly__header flex-flow space-between">
               <h2>Hourly Forcast</h2>
-              <label htmlFor="hourly-days" className="visually-hidden">
+              <label htmlFor="hourly-hours" className="visually-hidden">
                 Choose number of hours
               </label>
-              <select name="days" id="hourly-days" defaultValue="8" onInput={updateHours}>
+              <select name="hours" id="hourly-hours" defaultValue="8" onInput={updateHours}>
                 <option value="8">8 hours</option>
                 <option value="12">12 hours</option>
                 <option value="24">24 hours</option>
               </select>
             </header>
 
-            <div className="hourly__data">
+            <div className="hourly__data ">
               {data.hourly.time_filtered
                 .filter((_, index) => index < hours)
                 .map((time, index) => {

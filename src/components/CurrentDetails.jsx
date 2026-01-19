@@ -23,10 +23,10 @@ export default function CurrentDetails({ data, units }) {
   ];
 
   return (
-    <div className="current__details flex-flow space-between">
+    <div className="current__details grid-flow">
       {details.map((detail, index) => {
         return (
-          <div key={index} className="current-detail">
+          <div key={index} className="current-detail bg-surface-400">
             <h3>{detail.label}</h3>
             <span>
               {detail.value} {detail.unit}
