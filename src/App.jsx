@@ -12,7 +12,7 @@ import UnitsIcon from "./assets/images/ui-icons/icon-units.svg";
 
 function App() {
   const [units, setUnits] = useState("imperial");
-  const [hours, setHours] = useState("12");
+
   const [data, setData] = useState(null);
   const [location, setLocation] = useState({
     name: null,
@@ -23,11 +23,6 @@ function App() {
   function updateUnits(e) {
     const newUnits = e.target.value;
     setUnits(newUnits);
-  }
-
-  function updateHours(e) {
-    const newValue = e.target.value;
-    setHours(newValue);
   }
 
   function getWeatherIcon(code) {
@@ -75,23 +70,21 @@ function App() {
 
       {data ? (
         <main className="wrapper flow-lg">
-          <section className="hero margin-block-xl">
-            <h1 className="main-title text-center">How's the sky looking today?</h1>
-          </section>
+          <h1 className="main-title margin-block-xl text-center">How's the sky looking today?</h1>
 
-          <section className="search-container">
+          <section className="search-container flex-flow align-center justify-center span-all">
             <SearchContainer onSubmit={handleSubmit} />
           </section>
 
-          <section className="current flow">
-            <div className="current__main flex-flow align-center span-all">
+          <section className="current flow span-2">
+            <div className="current__main flex-flow align-center br-lg">
               <div className="location flow">
-                <h2>{location.name}</h2>
-                <p>{data.current.time_formatted}</p>
+                <h2 className="fs-lg">{location.name}</h2>
+                <p className="clr-neutral-200">{data.current.time_formatted}</p>
               </div>
               <div className="temperature flex-flow align-center">
                 <img className="weather-icon-lg" src={getWeatherIcon(data.current.weather_code)} alt="" />
-                <span>{data.current.temperature} &deg;</span>
+                <span className="fs-3xl">{data.current.temperature}&deg;</span>
               </div>
             </div>
 
@@ -99,7 +92,7 @@ function App() {
           </section>
 
           <section className="daily flow">
-            <h2>Daily Forcast</h2>
+            <h2 className="fs-md fw-semi-bold">Daily Forcast</h2>
             <div className="grid-auto">
               {data.daily.time.map((day, index) => {
                 return (
@@ -115,22 +108,12 @@ function App() {
             </div>
           </section>
 
-          <section className="hourly bg-surface-400">
-            <header className="hourly__header flex-flow space-between">
-              <h2>Hourly Forcast</h2>
-              <label htmlFor="hourly-hours" className="visually-hidden">
-                Choose number of hours
-              </label>
-              <select name="hours" id="hourly-hours" defaultValue="8" onInput={updateHours}>
-                <option value="8">8 hours</option>
-                <option value="12">12 hours</option>
-                <option value="24">24 hours</option>
-              </select>
-            </header>
+          <section className="hourly flow bg-surface-400 br-lg">
+            <h2 className="fs-md fw-semi-bold">Hourly Forcast</h2>
 
-            <div className="hourly__data ">
+            <div className="hourly__data grid-flow">
               {data.hourly.time_filtered
-                .filter((_, index) => index < hours)
+                .filter((_, index) => index < 8)
                 .map((time, index) => {
                   return (
                     //prettier-ignore

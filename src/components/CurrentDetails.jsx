@@ -23,14 +23,14 @@ export default function CurrentDetails({ data, units }) {
   ];
 
   return (
-    <div className="current__details grid-flow">
+    <div className="current__details grid-auto">
       {details.map((detail, index) => {
         return (
-          <div key={index} className="current-detail bg-surface-400">
-            <h3>{detail.label}</h3>
-            <span>
+          <div key={index} className="detail flow bg-surface-400 br-md">
+            <h3 className="clr-neutral-200 fw-medium fs-base">{detail.label}</h3>
+            <p className="fs-xl fw-light">
               {detail.value} {detail.unit}
-            </span>
+            </p>
           </div>
         );
       })}

@@ -43,7 +43,7 @@ export async function getWeatherData(units = "metric", location) {
 
     daily: {
       time: Array.from({ length: (Number(daily.timeEnd()) - Number(daily.time())) / daily.interval() }, (_, i) =>
-        new Date((Number(daily.time()) + i * daily.interval()) * 1000).toLocaleDateString("en-US", { weekday: "short" })
+        new Date((Number(daily.time()) + i * daily.interval()) * 1000).toLocaleDateString("en-US", { weekday: "short" }),
       ),
 
       weather_code: daily.variables(0).valuesArray(),
