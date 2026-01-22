@@ -12,7 +12,7 @@ import UnitsIcon from "./assets/images/ui-icons/icon-units.svg";
 
 function App() {
   const [units, setUnits] = useState("imperial");
-
+  const [hours, setHours] = useState("8");
   const [data, setData] = useState(null);
   const [location, setLocation] = useState({
     name: null,
@@ -23,6 +23,10 @@ function App() {
   function updateUnits(e) {
     const newUnits = e.target.value;
     setUnits(newUnits);
+  }
+  function updateHours(e) {
+    const newValue = e.target.value;
+    setHours(newValue);
   }
 
   function getWeatherIcon(code) {
@@ -54,14 +58,17 @@ function App() {
 
   return (
     <>
-      <header className="wrapper flex-flow align-center space-between">
-        <img src={logo} alt="" />
-        <div className="flex-flow">
+      <header className="wrapper flex-flow align-center space-between flex-wrap">
+        <img className="margin-center" src={logo} alt="" />
+        <div className="flex-flow margin-center">
           <label htmlFor="units-menu" className="visually-hidden">
             Choose Units
           </label>
-          <select name="units" id="units-menu" onInput={updateUnits}>
-            <option value="">Units</option>
+          <select className="dropdown flex-flow align-center" name="units" id="units-menu" onInput={updateUnits}>
+            <button>
+              <selectedcontent></selectedcontent>
+            </button>
+            <option value=""> Units</option>
             <option value="imperial">Imperial</option>
             <option value="metric">Metric</option>
           </select>
@@ -72,7 +79,7 @@ function App() {
         <main className="wrapper flow-lg">
           <h1 className="main-title margin-block-xl text-center">How's the sky looking today?</h1>
 
-          <section className="search-container flex-flow align-center justify-center span-all">
+          <section className="search-container">
             <SearchContainer onSubmit={handleSubmit} />
           </section>
 
@@ -109,11 +116,25 @@ function App() {
           </section>
 
           <section className="hourly flow bg-surface-400 br-lg">
-            <h2 className="fs-md fw-semi-bold">Hourly Forcast</h2>
+            <header className="hourly__header flex-flow align-center space-between">
+              <h2 className="fs-md fw-semi-bold">Hourly Forcast</h2>
+
+              <label htmlFor="hourly-hours" className="visually-hidden">
+                Choose number of hours
+              </label>
+              <select className="dropdown" name="hours" id="hourly-hours" defaultValue="8" onInput={updateHours}>
+                <button>
+                  <selectedcontent></selectedcontent>
+                </button>
+                <option value="8">8 hours</option>
+                <option value="12">12 hours</option>
+                <option value="24">24 hours</option>
+              </select>
+            </header>
 
             <div className="hourly__data grid-flow">
               {data.hourly.time_filtered
-                .filter((_, index) => index < 8)
+                .filter((_, index) => index < hours)
                 .map((time, index) => {
                   return (
                     //prettier-ignore
@@ -150,6 +171,6 @@ export default App;
 //8. DONE - show list of matching locations as user types
 //    (need to get/save list of locations somehow - did something similar in JS30)
 //9. DONE - check keys on mapped componenets
-//10. style everything to be responsive and check accessibility
-//11. add alt for icons
+//10. DONE - style everything to be responsive
+//11. check accessibility - add alt for icons / tab into search dropdown
 //12. error / loading states

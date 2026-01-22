@@ -22,8 +22,11 @@ export default function SearchContainer({ onSubmit }) {
   }, [query, showDropdown]);
 
   async function handleInput(e) {
-    setQuery(e.target.value);
-    setShowDropdown(true);
+    const value = e.target.value;
+    setQuery(value);
+    if (value.length >= 3) {
+      setShowDropdown(true);
+    }
   }
 
   function handleClick(city) {
@@ -41,14 +44,16 @@ export default function SearchContainer({ onSubmit }) {
   }
 
   return (
-    <form role="search" onSubmit={handleSubmit}>
+    <form className="flex-flow align-center justify-center flex-wrap" role="search" onSubmit={handleSubmit}>
       <label htmlFor="search-bar" className="visually-hidden">
         Search Location
       </label>
-      <input type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
-      <button type="submit">Search</button>
+      <input className="search-bar" type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
+      <button className="button" type="submit">
+        Search
+      </button>
       {showDropdown && (
-        <ul className="dropdown">
+        <ul className="dropdown flow" role="list">
           {queryResults.map((result, index) => {
             return (
               <li key={index} onClick={() => handleClick(result)}>
