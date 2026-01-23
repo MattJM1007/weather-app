@@ -90,7 +90,7 @@ function App() {
                 <p className="clr-neutral-200">{data.current.time_formatted}</p>
               </div>
               <div className="temperature flex-flow align-center">
-                <img className="weather-icon-lg" src={getWeatherIcon(data.current.weather_code)} alt="" />
+                <img className="weather-icon-lg" src={getWeatherIcon(data.current.weather_code)} alt={weatherCodes[data.current.weather_code]} />
                 <span className="fs-3xl">{data.current.temperature}&deg;</span>
               </div>
             </div>
@@ -108,6 +108,7 @@ function App() {
                   key={index} 
                   day={day} 
                   icon={getWeatherIcon(data.daily.weather_code[index])} 
+                  alt={weatherCodes[data.daily.weather_code[index]]}
                   tempMax={data.daily.temperature_max[index]} 
                   tempMin={data.daily.temperature_min[index]} />
                 );
@@ -116,7 +117,7 @@ function App() {
           </section>
 
           <section className="hourly flow bg-surface-400 br-lg">
-            <header className="hourly__header flex-flow align-center space-between">
+            <header className="hourly__header flex-flow align-center">
               <h2 className="fs-md fw-semi-bold">Hourly Forcast</h2>
 
               <label htmlFor="hourly-hours" className="visually-hidden">
@@ -132,7 +133,7 @@ function App() {
               </select>
             </header>
 
-            <div className="hourly__data grid-flow">
+            <div className="hourly__data grid-flow" tabIndex={hours === "8" ? "-1" : "0"}>
               {data.hourly.time_filtered
                 .filter((_, index) => index < hours)
                 .map((time, index) => {
@@ -142,6 +143,7 @@ function App() {
                       key={index}
                       time={time}
                       icon={getWeatherIcon(data.hourly.codes_filtered[index])}
+                      alt={weatherCodes[data.hourly.codes_filtered[index]]}
                       temp={data.hourly.temp_filtered[index]}
                     />
                   );
@@ -172,5 +174,5 @@ export default App;
 //    (need to get/save list of locations somehow - did something similar in JS30)
 //9. DONE - check keys on mapped componenets
 //10. DONE - style everything to be responsive
-//11. check accessibility - add alt for icons / tab into search dropdown
+//11. DONE - check accessibility - add alt for icons / tab into search dropdown
 //12. error / loading states

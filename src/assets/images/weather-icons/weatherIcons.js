@@ -9,14 +9,14 @@ import iconPartlyCloudy from "./icon-partly-cloudy.webp";
 import iconStorm from "./icon-storm.webp";
 
 const weatherIcons = {
-  "icon-sunny.webp": iconSunny,
-  "icon-rain.webp": iconRain,
-  "icon-snow.webp": iconSnow,
-  "icon-drizzle.webp": iconDrizzle,
-  "icon-fog.webp": iconFog,
-  "icon-overcast.webp": iconOvercast,
-  "icon-partly-cloudy.webp": iconPartlyCloudy,
-  "icon-storm.webp": iconStorm,
+  sunny: iconSunny,
+  rain: iconRain,
+  snow: iconSnow,
+  drizzle: iconDrizzle,
+  fog: iconFog,
+  overcast: iconOvercast,
+  "partly-cloudy": iconPartlyCloudy,
+  storm: iconStorm,
 };
 
 export default weatherIcons;

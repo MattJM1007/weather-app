@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { searchLocations } from "../services/geolocation";
 
 export default function SearchContainer({ onSubmit }) {
@@ -6,6 +6,9 @@ export default function SearchContainer({ onSubmit }) {
   const [queryResults, setQueryResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCity, setSelectedCity] = useState({});
+  const [hasError, setHasError] = useState(false);
+  const formRef = useRef(null);
+  const submitButton = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
@@ -23,6 +26,7 @@ export default function SearchContainer({ onSubmit }) {
 
   async function handleInput(e) {
     const value = e.target.value;
+    setHasError(false);
     setQuery(value);
     if (value.length >= 3) {
       setShowDropdown(true);
@@ -35,33 +39,69 @@ export default function SearchContainer({ onSubmit }) {
     console.log("selected", selectedCity);
     setShowDropdown(false);
     setQueryResults([]);
+    onSubmit(city);
+    setQuery("");
+  }
+
+  function handleKeyDown(e, city) {
+    console.log(e.key);
+    if (e.key === "Enter") {
+      setQuery(city.name);
+      setSelectedCity(city);
+      console.log("selected", selectedCity);
+      setShowDropdown(false);
+      setQueryResults([]);
+      onSubmit(city);
+      setQuery("");
+    }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    setQuery("");
-    onSubmit(selectedCity);
+
+    if (selectedCity.name) {
+      setHasError(false);
+      onSubmit(selectedCity);
+      setQuery("");
+      setSelectedCity({});
+    } else {
+      setHasError(true);
+      console.log("Please select a city from the dropdown");
+    }
   }
 
   return (
-    <form className="flex-flow align-center justify-center flex-wrap" role="search" onSubmit={handleSubmit}>
-      <label htmlFor="search-bar" className="visually-hidden">
-        Search Location
-      </label>
-      <input className="search-bar" type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
-      <button className="button" type="submit">
-        Search
-      </button>
-      {showDropdown && (
-        <ul className="dropdown flow" role="list">
-          {queryResults.map((result, index) => {
-            return (
-              <li key={index} onClick={() => handleClick(result)}>
-                {result.name}
-              </li>
-            );
-          })}
-        </ul>
+    <form ref={formRef} className="search-form " role="search" onSubmit={handleSubmit}>
+      <div className="flex-flow align-center justify-center flex-wrap">
+        <label htmlFor="search-bar" className="visually-hidden">
+          Search Location
+        </label>
+        <input className="search-bar" type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
+        {showDropdown && (
+          <ul className="dropdown flow" role="listbox" aria-label="search results">
+            {queryResults.map((result, index) => {
+              return (
+                //prettier-ignore
+                <li
+                key={index}
+                role="option"
+                tabIndex="0"
+                onClick={() => handleClick(result)}
+                onKeyDown={(e) => handleKeyDown(e, result)}>
+                  {result.name}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <button ref={submitButton} className="button" type="submit">
+          Search
+        </button>
+      </div>
+      {hasError && (
+        <p className="error text-center" aria-live="polite">
+          Please select a city from the dropdown
+        </p>
       )}
     </form>
   );

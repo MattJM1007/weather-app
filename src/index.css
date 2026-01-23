@@ -139,7 +139,9 @@ blockquote {
 }
 
 ul[role="list"],
-ol[role="list"] {
+ol[role="list"],
+ul[role="listbox"],
+ol[role="listbox"] {
   list-style: none;
   padding: 0;
 }
@@ -371,6 +373,11 @@ body {
   border-radius: var(--br-lg);
 }
 
+.error {
+  color: var(--clr-accent-orange-500);
+  margin-block-start: 1rem;
+}
+
 /* ******** COMPONENTS ******** */
 select,
 ::picker(select) {
@@ -397,6 +404,8 @@ select,
 
 .hourly .dropdown {
   background: var(--clr-neutral-600);
+  margin-inline-start: auto;
+  max-width: fit-content;
 }
 
 .dropdown::picker-icon {
@@ -455,7 +464,7 @@ select,
   background: var(--clr-neutral-800);
   color: inherit;
   border: 0;
-  padding-inline: calc(var(--space-xl) + 10px);
+  padding-inline-start: calc(var(--space-xl) + 10px);
   padding-block: var(--space-xs);
   border-radius: var(--br-md);
   max-width: 33rem;
@@ -622,6 +631,10 @@ form::before {
   .hourly::-webkit-scrollbar-track {
     background: transparent;
   }
+}
+
+.hourly__header > * {
+  flex: 1;
 }
 
 .hourly__hour {
