@@ -47,6 +47,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log("Location object:", location);
+  }, [location]);
+
+  useEffect(() => {
     if (location.latitude && location.longitude) {
       const setWeatherData = async () => {
         try {
