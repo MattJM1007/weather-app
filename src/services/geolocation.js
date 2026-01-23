@@ -36,6 +36,7 @@ export async function fetchLocation() {
   try {
     const userLocation = await getUserLocation();
     const locationName = await getLocationName(userLocation.lat, userLocation.long);
+    console.log("Name:", locationName);
     return {
       name: `${locationName.city}, ${locationName.country.includes("United States") ? locationName.state : locationName.country} `,
       latitude: userLocation.lat,

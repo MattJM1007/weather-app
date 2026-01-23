@@ -40,7 +40,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: [Code](https://github.com/MattJM1007/weather-app)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Live Site URL: [Click me](https://mattjm1007.github.io/weather-app/)
 
 ## My process
 
