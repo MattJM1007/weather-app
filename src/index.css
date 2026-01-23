@@ -648,3 +648,22 @@ form::before {
 }
 
 /* ******** EXCEPTIONS ******** */
+.loading-state {
+  padding: var(--space-lg);
+}
+
+.current.loading-state {
+  min-height: 700px;
+
+  @media (width > 30em) {
+    min-height: 480px;
+  }
+}
+
+.daily.loading-state {
+  min-height: 700px;
+
+  @media (width > 30em) {
+    min-height: 220px;
+  }
+}

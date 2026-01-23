@@ -47,29 +47,26 @@ export async function fetchLocation() {
 }
 
 export async function searchLocations(query) {
-  try {
-    if (query.length < 3) return [];
+  if (query.length < 3) return [];
 
-    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query.split(",")[0])}&count=10&language=en&format=json`);
+  try {
+    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
 
     if (!response.ok) {
-      throw new Error("Error at api call");
+      throw new Error("Failed to fetch locations");
     }
 
     const data = await response.json();
 
-    const results = data.results.map((item) => {
-      return {
-        name: `${item.name}, ${item.country?.includes("United States") ? item.admin1 : item.country} `,
-        latitude: item.latitude,
-        longitude: item.longitude,
-      };
-    });
-
-    console.log("Results", results);
-
-    return results;
+    return (
+      data.results?.map((place) => ({
+        name: `${place.name}, ${place.admin1 || ""} ${place.country}`.trim(),
+        latitude: place.latitude,
+        longitude: place.longitude,
+      })) ?? []
+    );
   } catch (error) {
-    console.error("error fetching location", error);
+    console.error("Error fetching locations:", error);
+    return [];
   }
 }

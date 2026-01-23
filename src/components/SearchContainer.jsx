@@ -77,7 +77,7 @@ export default function SearchContainer({ onSubmit }) {
           Search Location
         </label>
         <input className="search-bar" type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
-        {showDropdown && (
+        {showDropdown && queryResults.length > 0 && (
           <ul className="dropdown flow" role="listbox" aria-label="search results">
             {queryResults.map((result, index) => {
               return (
