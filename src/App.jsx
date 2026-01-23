@@ -163,7 +163,12 @@ function App() {
                 </select>
               </header>
 
-              <div className="hourly__data grid-flow" tabIndex={hours === "8" ? "-1" : "0"}>
+              <div
+                className="hourly__data grid-flow"
+                tabIndex={hours === "8" ? "-1" : "0"}
+                role={hours === "8" ? undefined : "region"}
+                aria-label={hours === "8" ? undefined : "Scrollable hourly forecast"}
+              >
                 {data.hourly.time_filtered
                   .filter((_, index) => index < hours)
                   .map((time, index) => {

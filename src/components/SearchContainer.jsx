@@ -32,23 +32,23 @@ export default function SearchContainer({ onSubmit }) {
     }
   }
 
-  function handleClick(city) {
-    setQuery(city.name);
+  function selectCity(city) {
     setSelectedCity(city);
     setShowDropdown(false);
     setQueryResults([]);
     onSubmit(city);
     setQuery("");
+    setHasError(false);
+  }
+
+  function handleClick(city) {
+    selectCity(city);
   }
 
   function handleKeyDown(e, city) {
-    if (e.key === "Enter") {
-      setQuery(city.name);
-      setSelectedCity(city);
-      setShowDropdown(false);
-      setQueryResults([]);
-      onSubmit(city);
-      setQuery("");
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      selectCity(city);
     }
   }
 
@@ -71,7 +71,16 @@ export default function SearchContainer({ onSubmit }) {
         <label htmlFor="search-bar" className="visually-hidden">
           Search Location
         </label>
-        <input className="search-bar" type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
+        {/* prettier-ignore */}
+        <input 
+          className="search-bar" 
+          type="search" 
+          name="search-bar" 
+          id="search-bar" 
+          value={query} 
+          onInput={handleInput} 
+          placeholder="Search for a place..." 
+        />
         {showDropdown && queryResults.length > 0 && (
           <ul className="dropdown flow" role="listbox" aria-label="search results">
             {queryResults.map((result, index) => {
