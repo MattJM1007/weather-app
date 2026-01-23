@@ -148,6 +148,10 @@ hourly: {
     },
 ```
 
+#### Using customizable select
+
+- used the new customizable select which only works in chrome right now. This made styling much easier!
+
 ### Continued development
 
 I would like to better impliment the loading and error states. I think they are not 100% the best they could be, although I did include them. I would also like to keep learning how to better handle data more efficiently.

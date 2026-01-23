@@ -48,6 +48,12 @@ export async function fetchLocation() {
     };
   } catch (error) {
     console.error("location error", error);
+    // Return default location
+    return {
+      name: "New York, NY",
+      latitude: 40.7128,
+      longitude: -74.006,
+    };
   }
 }
 

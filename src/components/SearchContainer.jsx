@@ -35,7 +35,6 @@ export default function SearchContainer({ onSubmit }) {
   function handleClick(city) {
     setQuery(city.name);
     setSelectedCity(city);
-    console.log("selected", selectedCity);
     setShowDropdown(false);
     setQueryResults([]);
     onSubmit(city);
@@ -43,11 +42,9 @@ export default function SearchContainer({ onSubmit }) {
   }
 
   function handleKeyDown(e, city) {
-    console.log(e.key);
     if (e.key === "Enter") {
       setQuery(city.name);
       setSelectedCity(city);
-      console.log("selected", selectedCity);
       setShowDropdown(false);
       setQueryResults([]);
       onSubmit(city);
@@ -65,7 +62,6 @@ export default function SearchContainer({ onSubmit }) {
       setSelectedCity({});
     } else {
       setHasError(true);
-      console.log("Please select a city from the dropdown");
     }
   }
 

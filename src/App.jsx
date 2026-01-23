@@ -6,8 +6,8 @@ import weatherIcons from "./assets/images/weather-icons/weatherIcons";
 import logo from "./assets/images/logo.svg";
 import SearchContainer from "./components/SearchContainer";
 import CurrentDetails from "./components/CurrentDetails";
-import DayForcast from "./components/DayForcast";
-import HourForcast from "./components/HourForcast";
+import DayForecast from "./components/DayForecast";
+import HourForecast from "./components/HourForecast";
 import LoadingIcon from "./assets/images/ui-icons/icon-loading.svg";
 import ErrorIcon from "./assets/images/ui-icons/icon-error.svg";
 
@@ -47,10 +47,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("Location object:", location);
-  }, [location]);
-
-  useEffect(() => {
     if (location.latitude && location.longitude) {
       const setWeatherData = async () => {
         try {
@@ -66,9 +62,6 @@ function App() {
       setWeatherData();
     }
   }, [units, location]);
-
-  // console.log("Render - location:", location);
-  console.log("Render - data:", data);
 
   return (
     <>
@@ -134,7 +127,7 @@ function App() {
                 {data.daily.time.map((day, index) => {
                   return (
                     //prettier-ignore
-                    <DayForcast 
+                    <DayForecast 
                   key={index} 
                   day={day} 
                   icon={getWeatherIcon(data.daily.weather_code[index])} 
@@ -176,7 +169,7 @@ function App() {
                   .map((time, index) => {
                     return (
                       //prettier-ignore
-                      <HourForcast
+                      <HourForecast
                       key={index}
                       time={time}
                       icon={getWeatherIcon(data.hourly.codes_filtered[index])}
