@@ -60,11 +60,16 @@ export async function searchLocations(query) {
     const data = await response.json();
 
     return (
-      data.results?.map((place) => ({
-        name: `${place.name}, ${place.admin1 || ""} ${place.country}`.trim(),
-        latitude: place.latitude,
-        longitude: place.longitude,
-      })) ?? []
+      data.results?.map((place) => {
+        const isUS = place.country?.toLowerCase().includes("united states");
+        const location = isUS ? place.admin1 : place.country;
+
+        return {
+          name: `${place.name}, ${location}`,
+          latitude: place.latitude,
+          longitude: place.longitude,
+        };
+      }) ?? []
     );
   } catch (error) {
     console.error("Error fetching locations:", error);
