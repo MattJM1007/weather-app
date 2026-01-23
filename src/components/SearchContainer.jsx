@@ -7,7 +7,6 @@ export default function SearchContainer({ onSubmit }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCity, setSelectedCity] = useState({});
   const [hasError, setHasError] = useState(false);
-  const formRef = useRef(null);
   const submitButton = useRef(null);
 
   useEffect(() => {
@@ -71,7 +70,7 @@ export default function SearchContainer({ onSubmit }) {
   }
 
   return (
-    <form ref={formRef} className="search-form " role="search" onSubmit={handleSubmit}>
+    <form className="search-form " role="search" onSubmit={handleSubmit}>
       <div className="flex-flow align-center justify-center flex-wrap">
         <label htmlFor="search-bar" className="visually-hidden">
           Search Location

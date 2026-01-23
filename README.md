@@ -1,6 +1,6 @@
 # Frontend Mentor - Weather app solution
 
-This is a solution to the [Weather app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/weather-app-K1FhddVm49). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
+This is a solution to the [Weather app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/weather-app-K1FhddVm49). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
 ## Table of contents
 
@@ -16,8 +16,6 @@ This is a solution to the [Weather app challenge on Frontend Mentor](https://www
 - [Author](#author)
 - [Acknowledgments](#acknowledgments)
 
-**Note: Delete this note and update the table of contents based on what sections you keep.**
-
 ## Overview
 
 ### The challenge
@@ -30,26 +28,18 @@ Users should be able to:
 - Browse a 7-day weather forecast with daily high/low temperatures and weather icons
 - View an hourly forecast showing temperature changes throughout the day
 - Switch between different days of the week using the day selector in the hourly forecast section
-- Toggle between Imperial and Metric measurement units via the units dropdown 
+- Toggle between Imperial and Metric measurement units via the units dropdown
 - Switch between specific temperature units (Celsius and Fahrenheit) and measurement units for wind speed (km/h and mph) and precipitation (millimeters) via the units dropdown
 - View the optimal layout for the interface depending on their device's screen size
 - See hover and focus states for all interactive elements on the page
 
 ### Screenshot
 
-![](./screenshot.jpg)
-
-Add a screenshot of your solution. The easiest way to do this is to use Firefox to view your project, right-click the page and select "Take a Screenshot". You can choose either a full-height screenshot or a cropped one based on how long the page is. If it's very long, it might be best to crop it.
-
-Alternatively, you can use a tool like [FireShot](https://getfireshot.com/) to take the screenshot. FireShot has a free option, so you don't need to purchase it. 
-
-Then crop/optimize/edit your image however you like, add it to your project, and update the file path in the image above.
-
-**Note: Delete this note and the paragraphs above when you add your screenshot. If you prefer not to add a screenshot, feel free to remove this entire section.**
+![](./screenshot.png)
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
+- Solution URL: [Code](https://github.com/MattJM1007/weather-app)
 - Live Site URL: [Add live site URL here](https://your-live-site-url.com)
 
 ## My process
@@ -62,58 +52,110 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 - CSS Grid
 - Mobile-first workflow
 - [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
-- [Styled Components](https://styled-components.com/) - For styles
-
-**Note: These are just examples. Delete this note and replace the list above with your own choices**
 
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+#### React useEffect
 
-To see how you can add code snippets, see below:
+This was my first big react project. I learned to use useEffect in multiple locations to handle rendering when the state variables changed. Notably when the location changed from the user searching:
 
-```html
-<h1>Some HTML code I'm proud of</h1>
-```
-```css
-.proud-of-this-css {
-  color: papayawhip;
-}
-```
 ```js
-const proudOfThisFunc = () => {
-  console.log('🎉')
-}
+useEffect(() => {
+  if (location.latitude && location.longitude) {
+    const setWeatherData = async () => {
+      try {
+        setError(false);
+        const weatherData = await getWeatherData(units, location);
+        setData(weatherData);
+      } catch (err) {
+        console.error("Failed to fetch weather data", err);
+        setError(true);
+        setData(null);
+      }
+    };
+    setWeatherData();
+  }
+}, [units, location]);
 ```
 
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
+#### Accessibility
 
-**Note: Delete this note and the content within this section and replace with your own learnings.**
+I also learned more about accessibility to make the custom search dropdown keyboard accessibile. I also learned about a new aria role "listbox", which is useful for search. Also adding the tab index 0 to each li made them tabable.
+
+```js
+<form className="search-form " role="search" onSubmit={handleSubmit}>
+  <div className="flex-flow align-center justify-center flex-wrap">
+    <label htmlFor="search-bar" className="visually-hidden">
+      Search Location
+    </label>
+    <input className="search-bar" type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
+    {showDropdown && queryResults.length > 0 && (
+      <ul className="dropdown flow" role="listbox" aria-label="search results">
+        {queryResults.map((result, index) => {
+          return (
+            //prettier-ignore
+            <li
+                key={index}
+                role="option"
+                tabIndex="0"
+                onClick={() => handleClick(result)}
+                onKeyDown={(e) => handleKeyDown(e, result)}>
+                  {result.name}
+                </li>
+          );
+        })}
+      </ul>
+    )}
+    <button ref={submitButton} className="button" type="submit">
+      Search
+    </button>
+  </div>
+  {hasError && (
+    <p className="error text-center" aria-live="polite">
+      Please select a city from the dropdown
+    </p>
+  )}
+</form>
+```
+
+#### Handling API data
+
+I also learned to use a getter function to cleanup the hourly data to get just the data I needed to load
+
+```js
+hourly: {
+      time: Array.from({ length: (Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval() }, (_, i) => new Date((Number(hourly.time()) + i * hourly.interval()) * 1000)),
+
+      get currentHourIndex() {
+        return this.time.findIndex((time) => time.getHours() === weatherData.current.time.getHours() && time.getDay() === weatherData.current.time.getDay());
+      },
+
+      get time_filtered() {
+        return this.time.slice(this.currentHourIndex, this.currentHourIndex + 24).map((time) => time.toLocaleTimeString("en-US", { hour: "numeric", hour12: true }));
+      },
+
+      temperature: hourly.variables(0).valuesArray().map(Math.round),
+
+      get temp_filtered() {
+        return this.temperature.slice(this.currentHourIndex, this.currentHourIndex + 24);
+      },
+
+      weather_code: hourly.variables(1).valuesArray(),
+
+      get codes_filtered() {
+        return this.weather_code.slice(this.currentHourIndex, this.currentHourIndex + 24);
+      },
+    },
+```
 
 ### Continued development
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
-
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
+I would like to better impliment the loading and error states. I think they are not 100% the best they could be, although I did include them. I would also like to keep learning how to better handle data more efficiently.
 
 ### Useful resources
 
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
-
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
+- [MDN Listbox role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role) - info abou the listbox role
 
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
-
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
-
-## Acknowledgments
-
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
-
-**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
+- Frontend Mentor - [@MattJM1007](https://www.frontendmentor.io/profile/MattJM1007)
