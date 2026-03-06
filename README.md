@@ -27,12 +27,15 @@ Weather Now delivers real-time forecasts anywhere in the world. Search any locat
 ## Technical Highlights
 
 **Debounced Search with Accessible Custom Dropdown**
+
 Built a custom search component from scratch. Ensured accessibility by using semantic elements and the ARIA role of `listbox`. To ensure keyboard accessibility, `tabIndex=0` was added to list item. Made sure to debounce the input handler and add a minimum query length to avoid unnecessary API calls as the user types.
 
 **Data Transformation with JavaScript Getters**
+
 The Open-Meteo API provides raw, unprocessed data. In order to provide clean, ready to use data to the app, the data was processed at the time the API call is made. This was done in two steps. First was ensuring decimals were rounded to whole numbers. Second, JavaScript getters were used to filter the data to a 24 hour time period starting at the current time, which was all the app needs for its current functionality.
 
 **Coordinated State with useEffect**
+
 Used location and units as useEffect dependencies so the app re-fetches automatically when either changes — eliminating duplicated fetch logic and preventing stale data without over-triggering renders.
 
 ---
