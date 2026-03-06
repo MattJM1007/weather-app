@@ -72,9 +72,11 @@ npm run dev
 ## Challenges & What I Learned
 
 **Building an Accessible Search bar**
+
 This was my first time building an accessible search bar and dropdown. I knew it needed to be accessible, so I had to research to make sure it could be navigated by keyboard. I learned about new ARIA roles and how to handle tab index properly, which is an invaluable lesson. This also gave me the opportunity to utilize the new CSS anchor positioning for styling.
 
 **Handling Data and Multiple API calls**
+
 This project taught me a lot about how to handle and process data BEFORE it gets to the app. I learned to make use of getter functions to filter data down to just what the app needs. Additionally, making use of async/await was critical to ensure data loaded correctly. Also, getting the useEffect setup properly so that the effect runs when the user changes units or searches required a deep understanding of my components.
 
 ---
@@ -82,7 +84,9 @@ This project taught me a lot about how to handle and process data BEFORE it gets
 ## What I'd Improve
 
 **Error and Loading States**
+
 Currently error and loading states are implemented but can be improved. The loading state in particular could be styled better to more closely match the app layout. There should also be a loading state in the dropdown menu while the API is searching. An error state when the api call doesn't work should also be fleshed out more.
 
 **CSS Fallbacks**
+
 Fallbacks should be added for anchor positioning to make sure the dropdown is displayed correctly across different browsers. The customizable select should be further styled in a way to consider unsupported browsers, although it is a nice progressive enhancement.
