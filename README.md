@@ -60,8 +60,11 @@ npm run dev
 ```
 
 > No API key required
+
 > Geoloaction permission required for automatic location detection
+
 > CSS Anchor Positioning - requires Chrome 125+, Safari 26+, Firefox 147+
+
 > Customizable Select - requires Chrome 135+ (will appear as default select on other browsers)
 
 ---
