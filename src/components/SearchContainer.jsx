@@ -104,7 +104,7 @@ export default function SearchContainer({ onSubmit }) {
       </div>
       {hasError && (
         <p className="error text-center" aria-live="polite">
-          Please select a city from the dropdown
+          Please enter a valid city in the search bar
         </p>
       )}
     </form>

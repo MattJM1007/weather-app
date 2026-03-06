@@ -128,12 +128,13 @@ function App() {
                   return (
                     //prettier-ignore
                     <DayForecast 
-                  key={index} 
-                  day={day} 
-                  icon={getWeatherIcon(data.daily.weather_code[index])} 
-                  alt={weatherCodes[data.daily.weather_code[index]]}
-                  tempMax={data.daily.temperature_max[index]} 
-                  tempMin={data.daily.temperature_min[index]} />
+                      key={index} 
+                      day={day} 
+                      icon={getWeatherIcon(data.daily.weather_code[index])} 
+                      alt={weatherCodes[data.daily.weather_code[index]]}
+                      tempMax={data.daily.temperature_max[index]} 
+                      tempMin={data.daily.temperature_min[index]} 
+                    />
                   );
                 })}
               </div>
@@ -148,7 +149,7 @@ function App() {
           {data ? (
             <section className="hourly flow bg-surface-400 br-lg">
               <header className="hourly__header flex-flow align-center">
-                <h2 className="fs-md fw-semi-bold">Hourly Forcast</h2>
+                <h2 className="fs-md fw-semi-bold">Hourly Forecast</h2>
 
                 <label htmlFor="hourly-hours" className="visually-hidden">
                   Choose number of hours

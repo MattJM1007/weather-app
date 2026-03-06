@@ -1,165 +1,82 @@
-# Frontend Mentor - Weather app solution
+# Weather Now
 
-This is a solution to the [Weather app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/weather-app-K1FhddVm49). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
+A responsive forecast app that delivers real time weather information for anywhere in the world with current, daily, and hourly breakdowns, as well as unit toggling.
 
-## Table of contents
+![App Screenshot](./screenshot.webp)
 
-- [Overview](#overview)
-  - [The challenge](#the-challenge)
-  - [Screenshot](#screenshot)
-  - [Links](#links)
-- [My process](#my-process)
-  - [Built with](#built-with)
-  - [What I learned](#what-i-learned)
-  - [Continued development](#continued-development)
-  - [Useful resources](#useful-resources)
-- [Author](#author)
-- [Acknowledgments](#acknowledgments)
+[Live Demo](https://mattjm1007.github.io/weather-app/) · [View Code](https://github.com/MattJM1007/weather-app)
+
+---
 
 ## Overview
 
-### The challenge
+Weather Now delivers real-time forecasts anywhere in the world. Search any location and instantly see the current weather, 7-day forecast, and hourly breakdown in metric or imperial units — with your local weather loaded automatically as soon as you open the app.
 
-Users should be able to:
+---
 
-- Search for weather information by entering a location in the search bar
-- View current weather conditions including temperature, weather icon, and location details
-- See additional weather metrics like "feels like" temperature, humidity percentage, wind speed, and precipitation amounts
-- Browse a 7-day weather forecast with daily high/low temperatures and weather icons
-- View an hourly forecast showing temperature changes throughout the day
-- Switch between different days of the week using the day selector in the hourly forecast section
-- Toggle between Imperial and Metric measurement units via the units dropdown
-- Switch between specific temperature units (Celsius and Fahrenheit) and measurement units for wind speed (km/h and mph) and precipitation (millimeters) via the units dropdown
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
+## Features
 
-### Screenshot
+- Loads initial data based on the users location
+- Custom and accessible search with autocomplete dropdown
+- 7 day forecast showing the high and low for each day
+- Hourly forecast toggles between 8 and 12 hours
+- Mobile first responsive layout
 
-![](./screenshot.png)
+---
 
-### Links
+## Technical Highlights
 
-- Solution URL: [Code](https://github.com/MattJM1007/weather-app)
-- Live Site URL: [Click me](https://mattjm1007.github.io/weather-app/)
+**Debounced Search with Accessible Custom Dropdown**
+Built a custom search component from scratch. Ensured accessibility by using semantic elements and the ARIA role of `listbox`. To ensure keyboard accessibility, `tabIndex=0` was added to list item. Made sure to debounce the input handler and add a minimum query length to avoid unnecessary API calls as the user types.
 
-## My process
+**Data Transformation with JavaScript Getters**
+The Open-Meteo API provides raw, unprocessed data. In order to provide clean, ready to use data to the app, the data was processed at the time the API call is made. This was done in two steps. First was ensuring decimals were rounded to whole numbers. Second, JavaScript getters were used to filter the data to a 24 hour time period starting at the current time, which was all the app needs for its current functionality.
 
-### Built with
+**Coordinated State with useEffect**
+Used location and units as useEffect dependencies so the app re-fetches automatically when either changes — eliminating duplicated fetch logic and preventing stale data without over-triggering renders.
 
-- Semantic HTML5 markup
-- CSS custom properties
-- Flexbox
-- CSS Grid
-- Mobile-first workflow
-- [React](https://reactjs.org/) - JS library
+---
 
-### What I learned
+## Tech Stack
 
-#### React useEffect
+- React 19 + Vite
+- CSS (Grid, custom properties, mobile-first)
+- Geolocation API - used to get the users current location on page load and search location
+- [Open-Meteo API](https://open-meteo.com/) — used to fetch the weather data (no key required)
+- [Big Cloud Data](https://www.bigdatacloud.com/) - used to get the names of locations based on longitude and latitude
 
-This was my first big react project. I learned to use useEffect in multiple locations to handle rendering when the state variables changed. Notably when the location changed from the user searching:
+---
 
-```js
-useEffect(() => {
-  if (location.latitude && location.longitude) {
-    const setWeatherData = async () => {
-      try {
-        setError(false);
-        const weatherData = await getWeatherData(units, location);
-        setData(weatherData);
-      } catch (err) {
-        console.error("Failed to fetch weather data", err);
-        setError(true);
-        setData(null);
-      }
-    };
-    setWeatherData();
-  }
-}, [units, location]);
+## Getting Started
+
+```bash
+git clone https://github.com/MattJM1007/weather-app
+cd weather-app
+npm install
+npm run dev
 ```
 
-#### Accessibility
+> No API key required
+> Geoloaction permission required for automatic location detection
+> CSS Anchor Positioning - requires Chrome 125+, Safari 26+, Firefox 147+
+> Customizable Select - requires Chrome 135+ (will appear as default select on other browsers)
 
-I also learned more about accessibility to make the custom search dropdown keyboard accessibile. I also learned about a new aria role "listbox", which is useful for search. Also adding the tab index 0 to each li made them tabable.
+---
 
-```js
-<form className="search-form " role="search" onSubmit={handleSubmit}>
-  <div className="flex-flow align-center justify-center flex-wrap">
-    <label htmlFor="search-bar" className="visually-hidden">
-      Search Location
-    </label>
-    <input className="search-bar" type="search" name="search-bar" id="search-bar" value={query} onInput={handleInput} placeholder="Search for a place..." />
-    {showDropdown && queryResults.length > 0 && (
-      <ul className="dropdown flow" role="listbox" aria-label="search results">
-        {queryResults.map((result, index) => {
-          return (
-            //prettier-ignore
-            <li
-                key={index}
-                role="option"
-                tabIndex="0"
-                onClick={() => handleClick(result)}
-                onKeyDown={(e) => handleKeyDown(e, result)}>
-                  {result.name}
-                </li>
-          );
-        })}
-      </ul>
-    )}
-    <button ref={submitButton} className="button" type="submit">
-      Search
-    </button>
-  </div>
-  {hasError && (
-    <p className="error text-center" aria-live="polite">
-      Please select a city from the dropdown
-    </p>
-  )}
-</form>
-```
+## Challenges & What I Learned
 
-#### Handling API data
+**Building an Accessible Search bar**
+This was my first time building an accessible search bar and dropdown. I knew it needed to be accessible, so I had to research to make sure it could be navigated by keyboard. I learned about new ARIA roles and how to handle tab index properly, which is an invaluable lesson. This also gave me the opportunity to utilize the new CSS anchor positioning for styling.
 
-I also learned to use a getter function to cleanup the hourly data to get just the data I needed to load
+**Handling Data and Multiple API calls**
+This project taught me a lot about how to handle and process data BEFORE it gets to the app. I learned to make use of getter functions to filter data down to just what the app needs. Additionally, making use of async/await was critical to ensure data loaded correctly. Also, getting the useEffect setup properly so that the effect runs when the user changes units or searches required a deep understanding of my components.
 
-```js
-hourly: {
-      time: Array.from({ length: (Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval() }, (_, i) => new Date((Number(hourly.time()) + i * hourly.interval()) * 1000)),
+---
 
-      get currentHourIndex() {
-        return this.time.findIndex((time) => time.getHours() === weatherData.current.time.getHours() && time.getDay() === weatherData.current.time.getDay());
-      },
+## What I'd Improve
 
-      get time_filtered() {
-        return this.time.slice(this.currentHourIndex, this.currentHourIndex + 24).map((time) => time.toLocaleTimeString("en-US", { hour: "numeric", hour12: true }));
-      },
+**Error and Loading States**
+Currently error and loading states are implemented but can be improved. The loading state in particular could be styled better to more closely match the app layout. There should also be a loading state in the dropdown menu while the API is searching. An error state when the api call doesn't work should also be fleshed out more.
 
-      temperature: hourly.variables(0).valuesArray().map(Math.round),
-
-      get temp_filtered() {
-        return this.temperature.slice(this.currentHourIndex, this.currentHourIndex + 24);
-      },
-
-      weather_code: hourly.variables(1).valuesArray(),
-
-      get codes_filtered() {
-        return this.weather_code.slice(this.currentHourIndex, this.currentHourIndex + 24);
-      },
-    },
-```
-
-#### Using customizable select
-
-- used the new customizable select which only works in chrome right now. This made styling much easier!
-
-### Continued development
-
-I would like to better impliment the loading and error states. I think they are not 100% the best they could be, although I did include them. I would also like to keep learning how to better handle data more efficiently.
-
-### Useful resources
-
-- [MDN Listbox role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/listbox_role) - info abou the listbox role
-
-## Author
-
-- Frontend Mentor - [@MattJM1007](https://www.frontendmentor.io/profile/MattJM1007)
+**CSS Fallbacks**
+Fallbacks should be added for anchor positioning to make sure the dropdown is displayed correctly across different browsers. The customizable select should be further styled in a way to consider unsupported browsers, although it is a nice progressive enhancement.
