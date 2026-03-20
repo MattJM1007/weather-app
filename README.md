@@ -4,7 +4,7 @@ A responsive forecast app that delivers real time weather information for anywhe
 
 ![App Screenshot](./screenshot.webp)
 
-[Live Demo](https://mattjm1007.github.io/weather-app/) · [View Code](https://github.com/MattJM1007/weather-app)
+[Live Demo](https://matt-miguel.github.io/weather-app/) · [View Code](https://github.com/matt-miguel/weather-app)
 
 ---
 
@@ -53,7 +53,7 @@ Used location and units as useEffect dependencies so the app re-fetches automati
 ## Getting Started
 
 ```bash
-git clone https://github.com/MattJM1007/weather-app
+git clone https://github.com/matt-miguel/weather-app
 cd weather-app
 npm install
 npm run dev
@@ -61,7 +61,7 @@ npm run dev
 
 > No API key required
 
-> Geoloaction permission required for automatic location detection
+> Geolocation permission required for automatic location detection
 
 > CSS Anchor Positioning - requires Chrome 125+, Safari 26+, Firefox 147+
 
